@@ -6,7 +6,54 @@
   box-sizing: border-box;
 }
 
+html {
+  font-size: 0.69vw;
+}
+
 body {
   color: rgb(var(--foreground-rgb));
   padding: 2rem;
+  font-size: 2rem;
+}
+
+@media only screen and (max-width: 749px) {
+  html {
+    font-size: 2.564102564vw;
+  }
+  body {
+    font-size: 1.4rem;
+  }
+}
+
+.btn {
+  border-radius: 0.2rem;
+  padding: 0.4rem 1.6rem;
+}
+
+.btn--primary {
+  background-color: black;
+  color: white;
+}
+
+.add-board {
+  margin-top: 3rem;
+}
+
+.add-board__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  grid-gap: 1rem;
+  margin-top: 1rem;
+}
+
+.add-board__buttons button {
+  border: 1px solid black;
+  border-radius: 0.3rem;
+  padding: 0.6rem 1.2rem;
+  width: 4rem;
+  text-align: center;
+}
+
+.add-board__submit-row {
+  margin-top: 1rem;
 }
