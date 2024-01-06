@@ -1,5 +1,8 @@
+"use client";
+
 import Header from "@/components/Header";
 import Image from "next/image";
+import { FormEvent, useState } from "react";
 
 export type Player = {
   name: string;
@@ -7,7 +10,9 @@ export type Player = {
   id: number;
 };
 
-const players = [
+// Track turn number 0 - 3
+// Track players, including their score
+const initialPlayers = [
   {
     name: "Sarah",
     score: 0,
@@ -26,7 +31,8 @@ const players = [
 ];
 
 export function Game() {
-  const turnNumber = 0;
+  const [players, setPlayers] = useState(initialPlayers);
+  const [turnNumber, setTurnNumber] = useState(0);
   const currentPlayer = players[turnNumber];
   return (
     <>
@@ -45,7 +51,7 @@ export function PlayersList({
 }) {
   return (
     <>
-      <p></p>
+      <p>Current Player is {currentPlayer.name}</p>
       <ul className="list-none font-bold">
         {players.map((player) => {
           return (
@@ -61,8 +67,12 @@ export function PlayersList({
 }
 
 export function AddScore({ currentPlayer }: { currentPlayer: Player }) {
+  const handleScoreSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(e.target);
+  };
   return (
-    <form action="">
+    <form onSubmit={(e) => handleScoreSubmit(e)}>
       <label htmlFor="score">Score</label>
       <input type="number" id="score" name="score" placeholder="0" required />
       <button type="submit">Save Points</button>
@@ -71,5 +81,9 @@ export function AddScore({ currentPlayer }: { currentPlayer: Player }) {
 }
 
 export default function Home() {
-  return <Game />;
+  return (
+    <main>
+      <Game />
+    </main>
+  );
 }
