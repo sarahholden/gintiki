@@ -2,7 +2,12 @@
 
 import Header from "@/components/Header";
 import Image from "next/image";
-import { FormEvent, useState } from "react";
+import React, {
+  EventHandler,
+  FormEvent,
+  FormEventHandler,
+  useState,
+} from "react";
 
 export type Player = {
   name: string;
@@ -32,12 +37,30 @@ const initialPlayers = [
 
 export function Game() {
   const [players, setPlayers] = useState(initialPlayers);
-  const [turnNumber, setTurnNumber] = useState(0);
+  const [turnNumber, setTurnNumber] = useState(1);
   const currentPlayer = players[turnNumber];
+
+  const onSaveScore = (score: number) => {
+    let playersDupe = [...players];
+    playersDupe[turnNumber].score += score;
+    setPlayers(playersDupe);
+    console.log(score);
+    console.log(players);
+    switchTurn();
+  };
+
+  function switchTurn() {
+    if (turnNumber < players.length - 1) {
+      setTurnNumber(turnNumber + 1);
+    } else {
+      setTurnNumber(0);
+    }
+  }
+
   return (
     <>
       <PlayersList players={players} currentPlayer={currentPlayer} />
-      <AddScore currentPlayer={currentPlayer} />
+      <AddScore currentPlayer={currentPlayer} onSaveScore={onSaveScore} />
     </>
   );
 }
@@ -56,6 +79,7 @@ export function PlayersList({
         {players.map((player) => {
           return (
             <li key={player.id}>
+              {currentPlayer.id === player.id && `Dice!`}
               <p>{player.name}</p>
               <p>{player.score}</p>
             </li>
@@ -66,15 +90,37 @@ export function PlayersList({
   );
 }
 
-export function AddScore({ currentPlayer }: { currentPlayer: Player }) {
+export function AddScore({
+  currentPlayer,
+  onSaveScore,
+}: {
+  currentPlayer: Player;
+  onSaveScore: any;
+}) {
+  const [score, setScore] = useState(`${currentPlayer.score}`);
+
   const handleScoreSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(e.target);
+    if (score) {
+      onSaveScore(parseInt(score));
+      setScore("");
+    }
   };
+
   return (
     <form onSubmit={(e) => handleScoreSubmit(e)}>
       <label htmlFor="score">Score</label>
-      <input type="number" id="score" name="score" placeholder="0" required />
+      <input
+        type="number"
+        id="score"
+        name="score"
+        placeholder="0"
+        required
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          setScore(e.target.value);
+        }}
+        value={score}
+      />
       <button type="submit">Save Points</button>
     </form>
   );
