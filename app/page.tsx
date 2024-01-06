@@ -58,10 +58,10 @@ export function Game() {
   }
 
   return (
-    <>
+    <section className="mx-auto max-w-md">
       <PlayersList players={players} currentPlayer={currentPlayer} />
       <AddScore currentPlayer={currentPlayer} onSaveScore={onSaveScore} />
-    </>
+    </section>
   );
 }
 
@@ -75,13 +75,13 @@ export function PlayersList({
   return (
     <>
       <p>Current Player is {currentPlayer.name}</p>
-      <ul className="list-none font-bold">
+      <ul className="list-none border-black border-b-2">
         {players.map((player) => {
           return (
-            <li key={player.id}>
+            <li key={player.id} className="flex border-black border-t-2">
               {currentPlayer.id === player.id && `Dice!`}
-              <p>{player.name}</p>
-              <p>{player.score}</p>
+              <p className="flex-auto">{player.name}</p>
+              <p className="ml-auto">{player.score}</p>
             </li>
           );
         })}
