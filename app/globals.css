@@ -28,11 +28,17 @@ body {
 .btn {
   border-radius: 0.2rem;
   padding: 0.4rem 1.6rem;
+  border: 1px solid currentColor;
 }
 
 .btn--primary {
   background-color: black;
   color: white;
+  border-color: transparent;
+}
+.btn--secondary {
+  background-color: white;
+  color: black;
 }
 
 .add-board {
