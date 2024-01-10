@@ -6,12 +6,9 @@ import React, {
 } from "react";
 
 import { Player } from "@/types/types";
-import { formatNumber } from "../lib/utils";
+import { formatNumber, useLocalStorageState } from "../lib/utils";
 import { AddScore } from "./AddScore";
 import { PlayersList } from "./PlayersList";
-
-// Track turn number 0 - 3
-// Track players, including their score
 
 export function Game({
   players,
@@ -27,6 +24,7 @@ export function Game({
   const [turnNumber, setTurnNumber] = useState(0);
   const currentPlayer = players[turnNumber];
   const [status, setStatus] = useState<null | string>(null);
+  const [moves, setMoves] = useState();
 
   const clearGame = () => {
     setTurnNumber(0);
@@ -36,16 +34,17 @@ export function Game({
   const onSaveScore = (score: number) => {
     const playersDupe = [...players];
     const currentPlayer = playersDupe[turnNumber];
-    playersDupe[turnNumber].score += score;
-    setPlayers(playersDupe);
+    currentPlayer.score += score;
 
-    if (playersDupe[turnNumber].score >= winningScore) {
+    if (currentPlayer.score >= winningScore) {
       setStatus(
         `${currentPlayer.name} wins the game with a score of ${formatNumber(
           currentPlayer.score
         )}`
       );
     }
+
+    setPlayers(playersDupe);
 
     switchTurn();
   };
