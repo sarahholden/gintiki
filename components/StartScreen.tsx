@@ -18,8 +18,20 @@ export function StartScreen({
   setGameStarted: Dispatch<SetStateAction<boolean>>;
 }) {
   const [error, setError] = useState<null | string>(null);
+
+  const validatePlayerNames = () => {
+    const hasEmptyName = players.some((player) => player.name === "");
+    if (hasEmptyName) {
+      setError("Fill out each player's name before continuing.");
+      return false;
+    }
+    return true;
+  };
+
   const handleStartClick = () => {
-    setGameStarted(true);
+    if (validatePlayerNames()) {
+      setGameStarted(true);
+    }
   };
 
   const handleAddSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -39,6 +51,8 @@ export function StartScreen({
     const playersCopy = [...players];
     [...players][i].name = value;
     setPlayers(playersCopy);
+    setError(null);
+    validatePlayerNames();
   };
 
   const handleDelete = (i: number) => {
@@ -46,6 +60,7 @@ export function StartScreen({
       setError("You must have at least one player");
       return;
     }
+    setError(null);
     const deleteVal = [...players];
     deleteVal.splice(i, 1);
     setPlayers(deleteVal);
