@@ -15,6 +15,7 @@ export default function Home() {
     },
   ]);
   const [gameStarted, setGameStarted] = useState(false);
+
   return (
     <main>
       {gameStarted && players?.length > 0 ? (

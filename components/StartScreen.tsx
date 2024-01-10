@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { Player } from "@/types/types";
 import { generateUniqueKey } from "../lib/utils";
 
@@ -14,16 +14,15 @@ export function StartScreen({
   setGameStarted,
 }: {
   players: Player[];
-  setPlayers: React.Dispatch<React.SetStateAction<Player[]>>;
-  setGameStarted: React.Dispatch<React.SetStateAction<boolean>>;
+  setPlayers: Dispatch<SetStateAction<Player[]>>;
+  setGameStarted: Dispatch<SetStateAction<boolean>>;
 }) {
-  const [index, setIndex] = useState(0);
   const [error, setError] = useState<null | string>(null);
   const handleStartClick = () => {
     setGameStarted(true);
   };
 
-  const handleAddSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleAddSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setPlayers([
       ...players,
@@ -35,10 +34,10 @@ export function StartScreen({
     ]);
   };
 
-  const handleChange = (e: React.FormEvent<HTMLInputElement>, i: number) => {
+  const handleChange = (e: FormEvent<HTMLInputElement>, i: number) => {
     const value = e.currentTarget.value;
     const playersCopy = [...players];
-    playersCopy[i].name = value;
+    [...players][i].name = value;
     setPlayers(playersCopy);
   };
 
@@ -58,7 +57,7 @@ export function StartScreen({
       <form onSubmit={(e) => handleAddSubmit(e)}>
         <div>
           {players.map((player, i) => (
-            <div className="hello" key={player?.id ? player.id : i}>
+            <div key={player.id} className="flex space-x-4">
               <div className="mb-4">
                 <label htmlFor={`player-${i}`} className="sr-only">
                   Player ${i + 1} Name
@@ -76,7 +75,7 @@ export function StartScreen({
                 />
               </div>
               <button type="button" onClick={() => handleDelete(i)}>
-                Delete
+                <span className="sr-only">Delete</span>X
               </button>
             </div>
           ))}
@@ -89,9 +88,11 @@ export function StartScreen({
               type="button"
               onClick={handleStartClick}
               className="btn btn--primary"
+              disabled={error ? true : false}
             >
               Start Game
             </button>
+            {error && <p>{error}</p>}
           </div>
         </div>
       </form>
