@@ -1,13 +1,14 @@
 import React, {
   Dispatch,
-  EventHandler,
-  FormEvent,
   FormEventHandler,
   SetStateAction,
   useState,
 } from "react";
-import Image from "next/image";
+
 import { Player } from "@/types/types";
+import { formatNumber } from "../lib/utils";
+import { AddScore } from "./AddScore";
+import { PlayersList } from "./PlayersList";
 
 // Track turn number 0 - 3
 // Track players, including their score
@@ -15,17 +16,37 @@ import { Player } from "@/types/types";
 export function Game({
   players,
   setPlayers,
+  winningScore,
+  handleResetClick,
 }: {
   players: Player[];
   setPlayers: Dispatch<SetStateAction<Player[]>>;
+  winningScore: number;
+  handleResetClick: FormEventHandler;
 }) {
   const [turnNumber, setTurnNumber] = useState(0);
   const currentPlayer = players[turnNumber];
+  const [status, setStatus] = useState<null | string>(null);
+
+  const clearGame = () => {
+    setTurnNumber(0);
+    setStatus(null);
+  };
 
   const onSaveScore = (score: number) => {
-    let playersDupe = [...players];
+    const playersDupe = [...players];
+    const currentPlayer = playersDupe[turnNumber];
     playersDupe[turnNumber].score += score;
     setPlayers(playersDupe);
+
+    if (playersDupe[turnNumber].score >= winningScore) {
+      setStatus(
+        `${currentPlayer.name} wins the game with a score of ${formatNumber(
+          currentPlayer.score
+        )}`
+      );
+    }
+
     switchTurn();
   };
 
@@ -40,133 +61,16 @@ export function Game({
   return (
     <section className="mx-auto max-w-md">
       <PlayersList players={players} currentPlayer={currentPlayer} />
-      <AddScore currentPlayer={currentPlayer} onSaveScore={onSaveScore} />
-    </section>
-  );
-}
-
-export function PlayersList({
-  players,
-  currentPlayer,
-}: {
-  players: Player[];
-  currentPlayer: Player;
-}) {
-  return (
-    <>
-      <p>Current Player is {currentPlayer.name}</p>
-      <ul className="list-none border-black border-b-2">
-        {players.map((player) => {
-          return (
-            <li key={player.id} className="flex border-black border-t-2">
-              {currentPlayer.id === player.id && (
-                <Image
-                  src="/dice.svg"
-                  width={30}
-                  height={30}
-                  alt="Picture of the author"
-                />
-              )}
-              <p className="flex-auto">{player.name}</p>
-              <p className="ml-auto">{player.score}</p>
-            </li>
-          );
-        })}
-      </ul>
-    </>
-  );
-}
-
-export function AddScore({
-  currentPlayer,
-  onSaveScore,
-}: {
-  currentPlayer: Player;
-  onSaveScore: any;
-}) {
-  const [score, setScore] = useState(
-    `${currentPlayer.score !== 0 ? currentPlayer.score.toString() : ""}`
-  );
-
-  const handleScoreSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (score) {
-      onSaveScore(parseInt(score));
-      setScore("");
-    }
-  };
-
-  const handleNumberClick = (e: React.MouseEvent<HTMLFieldSetElement>) => {
-    const newValue = (e.target as HTMLButtonElement).value;
-
-    if (newValue === undefined) return;
-
-    const newScore =
-      newValue === "X"
-        ? score.substring(0, score.length - 1)
-        : score + newValue;
-    setScore(newScore);
-  };
-
-  // Event delegation + value
-
-  return (
-    <form onSubmit={(e) => handleScoreSubmit(e)} className="add-board">
-      <label htmlFor="score">Score</label>
-      <fieldset
-        className="add-board__buttons"
-        onClick={(e) => handleNumberClick(e)}
-      >
-        <button type="button" value="1">
-          1
-        </button>
-        <button type="button" value="2">
-          2
-        </button>
-        <button type="button" value="3">
-          3
-        </button>
-        <button type="button" value="4">
-          4
-        </button>
-        <button type="button" value="5">
-          5
-        </button>
-        <button type="button" value="6">
-          6
-        </button>
-        <button type="button" value="7">
-          7
-        </button>
-        <button type="button" value="8">
-          8
-        </button>
-        <button type="button" value="9">
-          9
-        </button>
-        <button type="button" value="0">
-          0
-        </button>
-        <button type="button" value="X">
-          &lt;
-        </button>
-      </fieldset>
-      <div className="add-board__submit-row">
-        <input
-          type="number"
-          id="score"
-          name="score"
-          placeholder="0"
-          required
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-            setScore(e.target.value);
-          }}
-          value={score}
-        />
-        <button type="submit" className="btn btn--primary">
-          Save Points
-        </button>
+      {status ? (
+        <div className="winning-score">
+          <p>{status}</p>
+        </div>
+      ) : (
+        <AddScore currentPlayer={currentPlayer} onSaveScore={onSaveScore} />
+      )}
+      <div>
+        <button onClick={handleResetClick}>Reset Game</button>
       </div>
-    </form>
+    </section>
   );
 }
