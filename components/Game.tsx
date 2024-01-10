@@ -24,28 +24,23 @@ export function Game({
   const [turnNumber, setTurnNumber] = useState(0);
   const currentPlayer = players[turnNumber];
   const [status, setStatus] = useState<null | string>(null);
-  const [moves, setMoves] = useState();
-
-  const clearGame = () => {
-    setTurnNumber(0);
-    setStatus(null);
-  };
 
   const onSaveScore = (score: number) => {
     const playersDupe = [...players];
-    const currentPlayer = playersDupe[turnNumber];
-    currentPlayer.score += score;
+    const playerToUpdate = playersDupe[turnNumber];
 
-    if (currentPlayer.score >= winningScore) {
+    playerToUpdate.score += score;
+    playerToUpdate.history = [...playerToUpdate.history, score];
+
+    if (playerToUpdate.score >= winningScore) {
       setStatus(
-        `${currentPlayer.name} wins the game with a score of ${formatNumber(
-          currentPlayer.score
+        `${playerToUpdate.name} wins the game with a score of ${formatNumber(
+          playerToUpdate.score
         )}`
       );
     }
 
     setPlayers(playersDupe);
-
     switchTurn();
   };
 
@@ -59,7 +54,7 @@ export function Game({
 
   return (
     <section className="mx-auto max-w-md">
-      <PlayersList players={players} currentPlayer={currentPlayer} />
+      <PlayersList players={players} turnNumber={turnNumber} />
       {status ? (
         <div className="winning-score">
           <p>{status}</p>

@@ -31,7 +31,7 @@ export function StartScreen({
 
   const handleAddSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setPlayers([...players, { ...newPlayer }]);
+    setPlayers([...players, { ...newPlayer, id: generateUniqueKey("p") }]);
   };
 
   const handleChange = (e: FormEvent<HTMLInputElement>, i: number) => {

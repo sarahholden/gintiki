@@ -4,19 +4,19 @@ import { formatNumber } from "../lib/utils";
 
 export function PlayersList({
   players,
-  currentPlayer,
+  turnNumber,
 }: {
   players: Player[];
-  currentPlayer: Player;
+  turnNumber: number;
 }) {
   return (
     <>
-      <p>Current Player is {currentPlayer.name}</p>
+      <p>Current Player is {players[turnNumber].name}</p>
       <ul className="list-none border-black border-b-2">
-        {players.map((player) => {
+        {players.map((player, i) => {
           return (
             <li key={player.id} className="flex border-black border-t-2">
-              {currentPlayer.id === player.id && (
+              {turnNumber === i && (
                 <Image
                   src="/dice.svg"
                   width={30}
@@ -25,7 +25,18 @@ export function PlayersList({
                 />
               )}
               <p className="flex-auto">{player.name}</p>
-              <p className="ml-auto">{formatNumber(player.score)}</p>
+              <div>
+                <p className="ml-auto">{formatNumber(player.score)}</p>
+                <div>
+                  {player.history.map((turnScore, i) => {
+                    return (
+                      <span key={i} className="bg-red-100">
+                        {turnScore}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
             </li>
           );
         })}
