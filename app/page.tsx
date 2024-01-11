@@ -2,9 +2,9 @@
 
 import { Game } from "@/components/Game";
 import Header from "@/components/Header";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StartScreen } from "@/components/StartScreen";
-import { generateUniqueKey } from "../lib/utils";
+import { generateUniqueKey, useLocalStorageState } from "../lib/utils";
 import { Player } from "@/types/types";
 
 // Should probably just use a class instead
@@ -15,16 +15,34 @@ export const playerTemplate = {
 };
 
 export default function Home() {
-  const duplicatePlayer = { ...playerTemplate, id: generateUniqueKey("p") };
-  const [players, setPlayers] = useState([duplicatePlayer]);
-  const [gameStarted, setGameStarted] = useState(false);
+  const [players, setPlayers] = useLocalStorageState("gintiki:players", [
+    { ...playerTemplate, id: generateUniqueKey("p") },
+  ]);
+
+  const [gameStarted, setGameStarted] = useLocalStorageState(
+    "gintiki:gameStarted",
+    false
+  );
+  const [turnNumber, setTurnNumber] = useLocalStorageState(
+    "gintiki:turnNumber",
+    0
+  );
   const [winningScore, setWinningScore] = useState(10000);
 
   const handleResetClick = () => {
     setGameStarted(false);
     const newPlayer = { ...playerTemplate, id: generateUniqueKey("p") };
     setPlayers([newPlayer]);
+    setTurnNumber(0);
   };
+
+  function switchTurn() {
+    if (turnNumber < players.length - 1) {
+      setTurnNumber(turnNumber + 1);
+    } else {
+      setTurnNumber(0);
+    }
+  }
 
   return (
     <main>
@@ -34,6 +52,8 @@ export default function Home() {
           setPlayers={setPlayers}
           winningScore={winningScore}
           handleResetClick={handleResetClick}
+          turnNumber={turnNumber}
+          switchTurn={switchTurn}
         />
       ) : (
         <StartScreen

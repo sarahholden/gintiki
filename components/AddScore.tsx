@@ -5,21 +5,21 @@ import { formatNumber } from "../lib/utils";
 export function AddScore({
   currentPlayer,
   onSaveScore,
+  turnNumber,
 }: {
   currentPlayer: Player;
-  onSaveScore: any;
+  onSaveScore: (score: number) => void;
+  turnNumber: number;
 }) {
-  const [score, setScore] = useState(
-    `${currentPlayer.score !== 0 ? currentPlayer.score.toString() : ""}`
-  );
+  const [scoreToAdd, setScoreToAdd] = useState("");
 
-  const formattedScore = formatNumber(score);
+  const formattedScore = formatNumber(scoreToAdd);
 
   const handleScoreSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (score) {
-      onSaveScore(parseInt(score));
-      setScore("");
+    if (scoreToAdd) {
+      onSaveScore(parseInt(scoreToAdd));
+      setScoreToAdd("");
     }
   };
 
@@ -28,18 +28,18 @@ export function AddScore({
 
     if (newValue === undefined) return;
 
-    const newScore =
+    const updatedScore =
       newValue === "X"
-        ? score.substring(0, score.length - 1)
-        : score + newValue;
-    setScore(newScore);
+        ? scoreToAdd.substring(0, scoreToAdd.length - 1)
+        : scoreToAdd + newValue;
+    setScoreToAdd(updatedScore);
   };
 
   // Event delegation + value
 
   return (
     <form onSubmit={(e) => handleScoreSubmit(e)} className="add-board">
-      <label htmlFor="score">Score</label>
+      <label htmlFor="score">Add Points for {currentPlayer.name}</label>
       <fieldset
         className="add-board__buttons"
         onClick={(e) => handleNumberClick(e)}
@@ -87,11 +87,11 @@ export function AddScore({
           required
           className="sr-only"
           onChange={(e: ChangeEvent<HTMLInputElement>) => {
-            setScore(e.target.value);
+            setScoreToAdd(e.target.value);
           }}
-          value={score}
+          value={scoreToAdd}
         />
-        <p>{score ? formattedScore : <span>0</span>}</p>
+        <p>{scoreToAdd ? formatNumber(scoreToAdd) : <span>0</span>}</p>
         <button type="submit" className="btn btn--primary">
           Save Points
         </button>

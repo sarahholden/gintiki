@@ -63,14 +63,14 @@ export function StartScreen({
             <div key={player.id} className="flex space-x-4">
               <div className="mb-4">
                 <label htmlFor={`player-${i}`} className="sr-only">
-                  Player ${i + 1} Name
+                  Player ${i + 1} Initials
                 </label>
                 <input
                   type="text"
                   id={`player-${i}`}
                   name={`player-${i}`}
                   className="border border-black px-4 py-2"
-                  placeholder={`Player ${i + 1} name`}
+                  placeholder={`Player ${i + 1} Initials`}
                   value={player?.name ?? ""}
                   onChange={(e) => handleChange(e, i)}
                   required

@@ -7,6 +7,7 @@ export const generateUniqueKey = (pre: string) => {
 export const formatNumber = (numberToFormat: number | string) =>
   parseInt(`${numberToFormat}`, 10).toLocaleString("en-US");
 
+type LocalStorageType = any;
 /**
  *
  * @param {String} key The key to set in localStorage for this value
@@ -16,7 +17,7 @@ export const formatNumber = (numberToFormat: number | string) =>
 
 function useLocalStorageState(
   key: string,
-  defaultValue: string | Function = "",
+  defaultValue: LocalStorageType = "",
   // the = {} fixes the error we would get from destructuring when no argument was passed
   // Check https://jacobparis.com/blog/destructure-arguments for a detailed explanation
   { serialize = JSON.stringify, deserialize = JSON.parse } = {}

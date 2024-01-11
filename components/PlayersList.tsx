@@ -24,26 +24,30 @@ export function PlayersList({
           return (
             <li
               key={player.id}
-              className={`${
-                view === "grid" ? "divide-2 grow text-center" : "flex py-4"
+              className={`relative ${
+                view === "grid"
+                  ? "divide-2 grow text-center"
+                  : "flex py-4  justify-between"
               }`}
             >
-              {turnNumber === i && view !== "grid" && (
-                <Image
-                  src="/dice.svg"
-                  width={30}
-                  height={30}
-                  alt="Picture of the author"
-                />
-              )}
-              <p className="flex-auto">{player.name}</p>
+              <div className="flex space-x-4">
+                <p className="flex">{player.name}</p>
+                {turnNumber === i && view !== "grid" && (
+                  <Image
+                    src="/dice.svg"
+                    width={30}
+                    height={30}
+                    alt="Picture of the author"
+                  />
+                )}
+              </div>
               <div>
                 {view === "grid" && (
                   <ul className="divide-y-2">
                     {player.history.slice(1).map((historyItem, i) => {
                       return (
                         <li key={i} className="">
-                          {historyItem}
+                          {formatNumber(historyItem)}
                         </li>
                       );
                     })}
@@ -53,6 +57,12 @@ export function PlayersList({
                   {formatNumber(player.score)}
                 </p>
               </div>
+              {view === "list" && (
+                <div
+                  className="h-2 bg-slate-400 absolute bottom-0 left-0 block max-w-full"
+                  style={{ width: `${(player.score / 10000) * 100}%` }}
+                ></div>
+              )}
             </li>
           );
         })}

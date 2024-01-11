@@ -1,5 +1,6 @@
 import React, {
   Dispatch,
+  EventHandler,
   FormEventHandler,
   SetStateAction,
   useState,
@@ -15,13 +16,16 @@ export function Game({
   setPlayers,
   winningScore,
   handleResetClick,
+  turnNumber,
+  switchTurn,
 }: {
   players: Player[];
   setPlayers: Dispatch<SetStateAction<Player[]>>;
   winningScore: number;
   handleResetClick: FormEventHandler;
+  turnNumber: number;
+  switchTurn: () => void;
 }) {
-  const [turnNumber, setTurnNumber] = useState(0);
   const currentPlayer = players[turnNumber];
   const [status, setStatus] = useState<null | string>(null);
   const [view, setView] = useState("list");
@@ -44,14 +48,6 @@ export function Game({
     setPlayers(playersDupe);
     switchTurn();
   };
-
-  function switchTurn() {
-    if (turnNumber < players.length - 1) {
-      setTurnNumber(turnNumber + 1);
-    } else {
-      setTurnNumber(0);
-    }
-  }
 
   function toggleView() {
     setView(`${view === "grid" ? "list" : "grid"}`);
@@ -81,7 +77,11 @@ export function Game({
           <p>{status}</p>
         </div>
       ) : (
-        <AddScore currentPlayer={currentPlayer} onSaveScore={onSaveScore} />
+        <AddScore
+          currentPlayer={currentPlayer}
+          onSaveScore={onSaveScore}
+          turnNumber={turnNumber}
+        />
       )}
       <div>
         <button onClick={handleResetClick}>Reset Game</button>
