@@ -32,7 +32,7 @@ export function Game({
 }) {
   const currentPlayer = players[turnNumber];
   const [winningMessage, setWinningMessage] = useState<null | string>(null);
-  const [view, setView] = useState("list");
+  const [view, setView] = useState("grid");
 
   const onSaveScore = (score: number) => {
     const playersDupe = [...players];
