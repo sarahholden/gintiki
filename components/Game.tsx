@@ -24,6 +24,7 @@ export function Game({
   const [turnNumber, setTurnNumber] = useState(0);
   const currentPlayer = players[turnNumber];
   const [status, setStatus] = useState<null | string>(null);
+  const [view, setView] = useState("list");
 
   const onSaveScore = (score: number) => {
     const playersDupe = [...players];
@@ -52,9 +53,29 @@ export function Game({
     }
   }
 
+  function toggleView() {
+    setView(`${view === "grid" ? "list" : "grid"}`);
+  }
+
   return (
     <section className="mx-auto max-w-md">
-      <PlayersList players={players} turnNumber={turnNumber} />
+      {/* <p>Current Player is {players[turnNumber].name}</p> */}
+      <button aria-label="Show List View" onClick={toggleView}>
+        {view === "grid" ? (
+          <>
+            <span className="sr-only">Show List View</span>
+            List View
+          </>
+        ) : (
+          <>
+            <span className="sr-only">Show History</span>
+            History
+          </>
+        )}
+      </button>
+
+      <PlayersList players={players} turnNumber={turnNumber} view={view} />
+
       {status ? (
         <div className="winning-score">
           <p>{status}</p>

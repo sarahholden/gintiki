@@ -8,22 +8,22 @@ import { generateUniqueKey } from "../lib/utils";
 import { Player } from "@/types/types";
 
 // Should probably just use a class instead
-export const newPlayer = {
+export const playerTemplate = {
   name: "",
   score: 0,
   history: [0],
 };
 
 export default function Home() {
-  const duplicatePlayer = { ...newPlayer, id: generateUniqueKey("p") };
+  const duplicatePlayer = { ...playerTemplate, id: generateUniqueKey("p") };
   const [players, setPlayers] = useState([duplicatePlayer]);
   const [gameStarted, setGameStarted] = useState(false);
   const [winningScore, setWinningScore] = useState(10000);
 
   const handleResetClick = () => {
     setGameStarted(false);
-    const duplicatePlayer = { ...newPlayer, id: generateUniqueKey("p") };
-    setPlayers([duplicatePlayer]);
+    const newPlayer = { ...playerTemplate, id: generateUniqueKey("p") };
+    setPlayers([newPlayer]);
   };
 
   return (

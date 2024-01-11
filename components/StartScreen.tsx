@@ -1,7 +1,7 @@
 import React, { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { Player } from "@/types/types";
 import { generateUniqueKey } from "../lib/utils";
-import { newPlayer } from "../app/page";
+import { playerTemplate } from "../app/page";
 
 export function StartScreen({
   players,
@@ -31,7 +31,7 @@ export function StartScreen({
 
   const handleAddSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setPlayers([...players, { ...newPlayer, id: generateUniqueKey("p") }]);
+    setPlayers([...players, { ...playerTemplate, id: generateUniqueKey("p") }]);
   };
 
   const handleChange = (e: FormEvent<HTMLInputElement>, i: number) => {
