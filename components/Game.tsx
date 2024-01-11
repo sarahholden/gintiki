@@ -18,6 +18,8 @@ export function Game({
   handleResetClick,
   turnNumber,
   switchTurn,
+  winner,
+  setWinner,
 }: {
   players: Player[];
   setPlayers: Dispatch<SetStateAction<Player[]>>;
@@ -25,6 +27,8 @@ export function Game({
   handleResetClick: FormEventHandler;
   turnNumber: number;
   switchTurn: () => void;
+  winner: null | Player;
+  setWinner: Dispatch<SetStateAction<Player>>;
 }) {
   const currentPlayer = players[turnNumber];
   const [winningMessage, setWinningMessage] = useState<null | string>(null);
@@ -38,11 +42,7 @@ export function Game({
     playerToUpdate.history = [...playerToUpdate.history, score];
 
     if (playerToUpdate.score >= winningScore) {
-      setWinningMessage(
-        `${playerToUpdate.name} wins the game with a score of ${formatNumber(
-          playerToUpdate.score
-        )}`
-      );
+      setWinner(playerToUpdate);
     }
 
     setPlayers(playersDupe);
@@ -72,9 +72,12 @@ export function Game({
 
       <PlayersList players={players} turnNumber={turnNumber} view={view} />
 
-      {winningMessage ? (
+      {winner ? (
         <div className="winning-score">
-          <p>{winningMessage}</p>
+          <p>
+            {winner.name} wins the game with a score of
+            {formatNumber(winner.score)}
+          </p>
         </div>
       ) : (
         <AddScore

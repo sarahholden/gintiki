@@ -27,6 +27,7 @@ export default function Home() {
     "gintiki:turnNumber",
     0
   );
+  const [winner, setWinner] = useLocalStorageState("gintiki:winner", null);
   const [winningScore, setWinningScore] = useState(10000);
 
   const handleResetClick = () => {
@@ -34,6 +35,7 @@ export default function Home() {
     const newPlayer = { ...playerTemplate, id: generateUniqueKey("p") };
     setPlayers([newPlayer]);
     setTurnNumber(0);
+    setWinner(null);
   };
 
   function switchTurn() {
@@ -54,6 +56,8 @@ export default function Home() {
           handleResetClick={handleResetClick}
           turnNumber={turnNumber}
           switchTurn={switchTurn}
+          winner={winner}
+          setWinner={setWinner}
         />
       ) : (
         <StartScreen
