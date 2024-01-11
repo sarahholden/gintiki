@@ -27,7 +27,7 @@ export function Game({
   switchTurn: () => void;
 }) {
   const currentPlayer = players[turnNumber];
-  const [status, setStatus] = useState<null | string>(null);
+  const [winningMessage, setWinningMessage] = useState<null | string>(null);
   const [view, setView] = useState("list");
 
   const onSaveScore = (score: number) => {
@@ -38,7 +38,7 @@ export function Game({
     playerToUpdate.history = [...playerToUpdate.history, score];
 
     if (playerToUpdate.score >= winningScore) {
-      setStatus(
+      setWinningMessage(
         `${playerToUpdate.name} wins the game with a score of ${formatNumber(
           playerToUpdate.score
         )}`
@@ -72,9 +72,9 @@ export function Game({
 
       <PlayersList players={players} turnNumber={turnNumber} view={view} />
 
-      {status ? (
+      {winningMessage ? (
         <div className="winning-score">
-          <p>{status}</p>
+          <p>{winningMessage}</p>
         </div>
       ) : (
         <AddScore
