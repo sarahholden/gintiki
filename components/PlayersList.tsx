@@ -59,7 +59,7 @@ export function PlayersList({
               </div>
               {view === "list" && (
                 <div
-                  className="h-2 bg-slate-400 absolute bottom-0 left-0 block max-w-full"
+                  className="h-2 bg-slate-400 duration-400 absolute bottom-0 left-0 transition-[width] block max-w-full"
                   style={{ width: `${(player.score / 10000) * 100}%` }}
                 ></div>
               )}

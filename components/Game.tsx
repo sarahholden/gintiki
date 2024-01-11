@@ -84,7 +84,9 @@ export function Game({
         />
       )}
       <div>
-        <button onClick={handleResetClick}>Reset Game</button>
+        <button onClick={handleResetClick} className="btn">
+          Reset Game
+        </button>
       </div>
     </section>
   );
